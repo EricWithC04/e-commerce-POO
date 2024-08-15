@@ -9,13 +9,13 @@ class UserControllers {
             const users = await UserService.getAllUsers();
 
             if (!users || users.length === 0) {
-                res.status(404).send({
+                return res.status(404).send({
                     status: 404,
                     message: 'No se han encontrado usuarios!'
                 })
             }
 
-            return res.status(200).json({ users });
+            res.status(200).json({ users });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
@@ -28,7 +28,7 @@ class UserControllers {
             const user = await UserService.getUserById(id);
 
             if (!user) {
-                res.status(404).send({
+                return res.status(404).send({
                     status: 404,
                     message: 'No se ha encontrado el usuario!'
                 })
@@ -47,7 +47,7 @@ class UserControllers {
             const newUser = await UserService.createUser(data);
 
             if (!newUser) {
-                res.status(404).send({
+                return res.status(404).send({
                     status: 404,
                     message: 'No se ha podido crear el usuario!'
                 })
@@ -67,7 +67,7 @@ class UserControllers {
             const updatedUser = await UserService.updateUser(id, data);
 
             if (!updatedUser) {
-                res.status(404).send({
+                return res.status(404).send({
                     status: 404,
                     message: 'No se ha podido actualizar el usuario!'
                 })
@@ -86,7 +86,7 @@ class UserControllers {
             const deletedUser = await UserService.deleteUser(id);
 
             if (!deletedUser) {
-                res.status(404).send({
+                return res.status(404).send({
                     status: 404,
                     message: 'No se ha podido eliminar el usuario!'
                 })
