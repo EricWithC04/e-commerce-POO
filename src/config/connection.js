@@ -5,7 +5,7 @@ const connectionDB = async () => {
         sequelize.authenticate().then(() => {
             console.log('Connection has been established successfully.');
             
-            sequelize.sync({ force: true })
+            sequelize.sync({ alter: true })
                 .then(() => {
                     console.log('Synced models');
                     resolve();
