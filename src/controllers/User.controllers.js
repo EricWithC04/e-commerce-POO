@@ -25,13 +25,17 @@ class UserControllers {
         try {
             const { id } = req.params;
 
-            const user = await UserService.getUserById(id);
+            let user = await UserService.getUserById(id);
 
             if (!user) {
                 return res.status(404).send({
                     status: 404,
                     message: 'No se ha encontrado el usuario!'
                 })
+            }
+
+            if (user.role === "client") {
+                user = await UserService.getUserById(id, true);
             }
 
             res.status(200).json({ user });
