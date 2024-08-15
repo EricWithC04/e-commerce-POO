@@ -14,8 +14,8 @@ class ProductService {
         return product;
     }
 
-    async createProduct(product) {
-        const product = await ProductModel.create(product);
+    async createProduct(data) {
+        const product = await ProductModel.create(data);
         return product;
     }
 
