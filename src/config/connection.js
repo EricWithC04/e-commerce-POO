@@ -1,4 +1,4 @@
-import sequelize from "./db.js";
+import sequelize from "./relations.js";
 
 const connectionDB = async () => {
     return new Promise(( resolve, reject ) => {
