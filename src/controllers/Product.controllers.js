@@ -1,4 +1,6 @@
 import ProductService from "../services/Product.service.js";
+import UserService from "../services/User.service.js";
+import UserProductService from "../services/UserProduct.service.js";
 
 class ProductController {
 
@@ -41,7 +43,28 @@ class ProductController {
 
     async createProduct(req, res) {
         try {
-            const data = req.body;
+            const {
+                quantity,
+                ...data
+            } = req.body;
+            const { idUser } = req.params;
+
+            const user = await UserService.getUserById(idUser);
+
+            if (!user) {
+                return res.status(404).send({
+                    status: 404,
+                    message: 'No se ha encontrado el usuario!'
+                })
+            }
+
+            if (user.role === "client") {
+                return res.status(403).send({
+                    status: 403,
+                    message: 'Solamente los vendedores y administradores pueden crear productos!'
+                })
+            }
+
             const product = await ProductService.createProduct(data);
             
             if (!product) {
@@ -50,6 +73,8 @@ class ProductController {
                     message: 'No se ha podido crear el producto!'
                 })
             }
+
+            await UserProductService.addProductToUser(idUser, product.id, quantity);
 
             res.status(201).send({ product });
         } catch (err) {

@@ -12,17 +12,17 @@ class UserService {
     }
 
     async getUserById(id, isClient=false) {
-        const user = await UserModel.findByPk(id, isClient ? { 
+        const user = await UserModel.findByPk(id, { 
             attributes: ["name", "email", "role"],
-            include: { 
+            include: isClient ? { 
                 model: ProductModel, 
                 attributes: ['name'],
                 through: {
                     model: User_Product_Table,
                     attributes: ['quantity']
                 }
-            }
-        } : {});
+            } : null
+        });
         return user;
     }
 
