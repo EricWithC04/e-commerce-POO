@@ -65,13 +65,19 @@ class ProductController {
                 })
             }
 
-            const product = await ProductService.createProduct(data);
-            
+            let product = await ProductService.getProductByName(data.name);
+
             if (!product) {
-                return res.status(404).send({
-                    status: 404,
-                    message: 'No se ha podido crear el producto!'
-                })
+                product = await ProductService.createProduct(data);
+                
+                if (!product) {
+                    return res.status(404).send({
+                        status: 404,
+                        message: 'No se ha podido crear el producto!'
+                    })
+                }
+            } else {
+                await ProductService.updateProduct(product.id, { stock: product.stock + quantity });
             }
 
             await UserProductService.addProductToUser(idUser, product.id, quantity);

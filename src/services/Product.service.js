@@ -14,6 +14,11 @@ class ProductService {
         return product;
     }
 
+    async getProductByName(name) {
+        const product = await ProductModel.findOne({ where: { name } });
+        return product;
+    }
+
     async createProduct(data) {
         const product = await ProductModel.create(data);
         return product;
