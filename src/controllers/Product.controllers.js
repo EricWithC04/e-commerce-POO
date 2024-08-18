@@ -43,10 +43,7 @@ class ProductController {
 
     async createProduct(req, res) {
         try {
-            const {
-                quantity,
-                ...data
-            } = req.body;
+            const data = req.body;
             const { idUser } = req.params;
 
             const user = await UserService.getUserById(idUser);
@@ -77,10 +74,10 @@ class ProductController {
                     })
                 }
             } else {
-                await ProductService.updateProduct(product.id, { stock: product.stock + quantity });
+                await ProductService.updateProduct(product.id, { stock: product.stock + data.stock });
             }
 
-            await UserProductService.addProductToUser(idUser, product.id, quantity);
+            await UserProductService.addProductToUser(idUser, product.id, data.stock);
 
             res.status(201).send({ product });
         } catch (err) {

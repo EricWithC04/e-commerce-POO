@@ -7,10 +7,16 @@ const SaleModel = sequelize.define(
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
-            autoIncrement: true
+            autoIncrement: true,
+            allowNull: false
         },
         total: {
             type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        paymentMethod: {
+            type: DataTypes.ENUM("Efectivo", "Tarjeta", "Transferencia"),
+            defaultValue: "Efectivo",
             allowNull: false
         }
     }
