@@ -1,5 +1,7 @@
 import SaleService from "../services/Sale.service.js";
 import UserService from "../services/User.service.js";
+import ProductService from "../services/Product.service.js";
+import UserProductService from "../services/UserProduct.service.js";
 import SaleUserService from "../services/SaleUser.service.js";
 
 class SaleController {
@@ -100,8 +102,32 @@ class SaleController {
 
             let total = 0            
 
-            userClient.products.forEach(product => {
+            for (const product of userClient.products) {
                 total += product.price * product.user_product.quantity
+                
+                const browsedProduct = await ProductService.getProductByName(product.name)
+    
+                if (!browsedProduct) {
+                    return res.status(404).send({
+                        status: 404,
+                        message: 'No se ha encontrado el producto!'
+                    })
+                }
+                if (browsedProduct.stock < product.user_product.quantity) {
+                    return res.status(400).send({
+                        status: 400,
+                        message: 'No hay suficiente stock!'
+                    })
+                }
+            }
+
+            userClient.products.forEach(async (product) => {
+                const browsedProduct = await ProductService.getProductByName(product.name)
+
+                await ProductService.updateProduct(
+                    browsedProduct.id, 
+                    { stock: browsedProduct.stock - product.user_product.quantity }
+                )
             })
 
             const sale = await SaleService.addSale({ paymentMethod, total });
@@ -115,6 +141,8 @@ class SaleController {
 
             await SaleUserService.addSaleUser({ userId: idSeller, saleId: sale.id });
             await SaleUserService.addSaleUser({ userId: idClient, saleId: sale.id });
+
+            await UserProductService.removeAllProductsFromUser(idClient);
 
             res.status(201).send({ sale });
         } catch (err) {

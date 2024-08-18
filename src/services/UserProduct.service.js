@@ -13,6 +13,25 @@ class UserProductService {
         return userProduct;
     }
 
+    async removeProductFromUser(userId, productId) {
+        const userProductRemoved = await User_Product_Table.destroy({
+            where: {
+                userId,
+                productId
+            }
+        })
+        return userProductRemoved
+    }
+
+    async removeAllProductsFromUser(userId) {
+        const userProductsRemoved = await User_Product_Table.destroy({
+            where: {
+                userId
+            }
+        })
+        return userProductsRemoved
+    }
+
 }
 
 export default new UserProductService()
