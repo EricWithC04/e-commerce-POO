@@ -9,7 +9,7 @@ const {
 
 const router = Router();
 
-router.get("/:id", getAllSales);
+router.get("/:idUser", getAllSales);
 router.get("/seller/:id", getSalesOfUser);
 router.post("/:idSeller/:idClient", createSale);
 

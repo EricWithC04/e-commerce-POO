@@ -66,7 +66,7 @@ class SaleController {
             const { idSeller, idClient } = req.params;
             const { paymentMethod } = req.body
 
-            const userClient = await UserService.getUserById(idClient);
+            const userClient = await UserService.getUserById(idClient, true);
 
             if (!userClient) {
                 return res.status(404).send({
@@ -98,7 +98,7 @@ class SaleController {
                 });
             }
 
-            const total = 0
+            let total = 0            
 
             userClient.products.forEach(product => {
                 total += product.price * product.user_product.quantity
@@ -113,8 +113,8 @@ class SaleController {
                 });
             }
 
-            await SaleUserService.addSaleUser({ idUser: idSeller, idSale: sale.id });
-            await SaleUserService.addSaleUser({ idUser: idClient, idSale: sale.id });
+            await SaleUserService.addSaleUser({ userId: idSeller, saleId: sale.id });
+            await SaleUserService.addSaleUser({ userId: idClient, saleId: sale.id });
 
             res.status(201).send({ sale });
         } catch (err) {
