@@ -16,7 +16,7 @@ class UserService {
             attributes: ["name", "email", "role"],
             include: isClient ? { 
                 model: ProductModel, 
-                attributes: ['name'],
+                attributes: ['name', 'price'],
                 through: {
                     model: User_Product_Table,
                     attributes: ['quantity']

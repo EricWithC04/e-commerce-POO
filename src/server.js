@@ -7,6 +7,7 @@ import connectionDB from "./config/connection.js"
 
 import userRoutes from "./routes/User.routes.js"
 import productRoutes from "./routes/Product.routes.js"
+import saleRoutes from "./routes/Sale.routes.js"
 
 class Server {
 
@@ -33,6 +34,7 @@ class Server {
     routes() {
         this.app.use('/user', userRoutes)
         this.app.use('/product', productRoutes)
+        this.app.use('/sale', saleRoutes)
     }
 
     listen() {
