@@ -11,6 +11,7 @@ const {
     createUser,
     aggregateProductToUser,
     updateUser,
+    incrementProductQuantity,
     deleteUser
 } = UserControllers
 
@@ -19,6 +20,7 @@ router.get('/:id', getUserById);
 router.post('/', userSchema, validateSchema, createUser);
 router.post('/:idUser/:idProduct', aggregateProductToUser);
 router.put('/:id', updateUser);
+router.put('/:idUser/:idProduct', incrementProductQuantity);
 router.delete('/:id', deleteUser);
 
 export default router

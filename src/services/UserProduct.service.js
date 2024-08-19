@@ -13,6 +13,19 @@ class UserProductService {
         return userProduct;
     }
 
+    async incrementProductQuantity(userId, productId, quantity) {
+        const userProduct = await User_Product_Table.increment(
+            { quantity },
+            {
+                where: {
+                    userId,
+                    productId
+                }
+            }
+        )
+        return userProduct
+    }
+
     async removeProductFromUser(userId, productId) {
         const userProductRemoved = await User_Product_Table.destroy({
             where: {

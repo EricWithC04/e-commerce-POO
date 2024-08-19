@@ -1,4 +1,6 @@
+import ProductService from "../services/Product.service.js";
 import UserService from "../services/User.service.js";
+import UserProductService from "../services/UserProduct.service.js";
 
 class UserControllers {
 
@@ -116,6 +118,53 @@ class UserControllers {
             res.status(200).json({ updatedUser });
         } catch (error) {
             res.status(500).json({ error: error.message });
+        }
+    }
+
+    async incrementProductQuantity(req, res) {
+        try {
+            const { idUser, idProduct } = req.params;
+            const { quantity } = req.body;
+
+            const user = await UserService.getUserById(idUser);
+
+            if (!user) {
+                return res.status(404).send({
+                    status: 404,
+                    message: 'No se ha encontrado el usuario!'
+                })
+            }
+
+            if (user.role === "client") {
+                return res.status(403).send({
+                    status: 403,
+                    message: 'Solamente los vendedores pueden agregar más stock de los productos!'
+                })
+            }
+
+            const product = await ProductService.getProductById(idProduct);
+
+            if (!product) {
+                return res.status(404).send({
+                    status: 404,
+                    message: 'No se ha encontrado el producto!'
+                })
+            }
+
+            const updatedProductQuantity = await UserProductService.incrementProductQuantity(idUser, idProduct, quantity);
+
+            if (!updatedProductQuantity) {
+                return res.status(404).send({
+                    status: 404,
+                    message: 'No se ha podido incrementar la cantidad del producto!'
+                })
+            }
+
+            await ProductService.updateProduct(idProduct, { stock: product.stock + quantity });
+
+            res.status(200).json({ updatedProductQuantity });
+        } catch (err) {
+            console.error(err);
         }
     }
 
