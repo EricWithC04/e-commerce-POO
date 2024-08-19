@@ -63,6 +63,42 @@ class UserControllers {
         }
     }
 
+    async aggregateProductToUser(req, res) {
+        try {
+            const { idUser, idProduct } = req.params;
+            const { quantity } = req.body;
+
+            const user = await UserService.getUserById(idUser);
+
+            if (!user) {
+                return res.status(404).send({
+                    status: 404,
+                    message: 'No se ha encontrado el usuario!'
+                })
+            }
+
+            if (user.role !== "client") {
+                return res.status(403).send({
+                    status: 403,
+                    message: 'Solamente los clientes pueden agregar productos al carrito!'
+                })
+            }
+
+            const newUserProduct = await UserService.aggregateProductToUser(idUser, idProduct, quantity);
+
+            if (!newUserProduct) {
+                return res.status(404).send({
+                    status: 404,
+                    message: 'No se ha podido agregar el producto al carrito!'
+                })
+            }
+
+            res.status(201).json({ newUserProduct });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     async updateUser(req, res) {
         try {
             const { id } = req.params;

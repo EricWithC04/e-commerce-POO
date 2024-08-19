@@ -31,6 +31,11 @@ class UserService {
         return newUser;
     }
 
+    async aggregateProductToUser(idUser, idProduct, quantity) {
+        const newUserProduct = await User_Product_Table.create({ userId: idUser, productId: idProduct, quantity });
+        return newUserProduct;
+    }
+
     async updateUser(id, data) {
         const updatedUser = await UserModel.update(data, { where: { id } })
         return updatedUser;
